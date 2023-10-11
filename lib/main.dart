@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:cal/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:function_tree/function_tree.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,20 +21,48 @@ class _MyAppState extends State<MyApp> {
   String expression = "0";
   String result = "0";
 
-  void addNum(String char) {
+  void addChar(String char) {
     setState(() {
       if (expression == "0") {
-      expression = char;
-    } else {
-      expression += char;
-    }
+        expression = char;
+      } else {
+        expression += char;
+      }
 
-    log(expression);
-    
+      log(expression);
     });
   }
-  
 
+  void allClear() {
+    setState(() {
+      expression = "0";
+      result = "0";
+    });
+  }
+
+  void backspace() {
+    setState(() {
+      if (expression.length == 1) {
+        expression = "0";
+        result = "0";
+      } else {
+        expression = expression.substring(0, expression.length - 1);
+      }
+    });
+  }
+
+  void getResult() {
+    setState(() {
+      if (expression != "0") {
+        try {
+          result = expression.interpret().toString();
+        } catch (_) {
+          result = "Err";
+        }
+        log(result);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,21 +132,21 @@ class _MyAppState extends State<MyApp> {
                     CusButton(
                       text: "AC",
                       type: BtnType.allClear,
-                      function: () {},
+                      function: allClear,
                     ),
                     CusButton(
                       text: "⌫",
-                      function: () {},
+                      function: backspace,
                     ),
                     CusButton(
                       text: "^",
                       type: BtnType.operators,
-                      function: () {},
+                      function: () => addChar('^'),
                     ),
                     CusButton(
                       text: "/",
                       type: BtnType.operators,
-                      function: () {},
+                      function: () => addChar('/'),
                     ),
                   ],
                 ),
@@ -129,20 +158,20 @@ class _MyAppState extends State<MyApp> {
                   children: [
                     CusButton(
                       text: "7",
-                      function: () => addNum('7'),
+                      function: () => addChar('7'),
                     ),
                     CusButton(
                       text: "8",
-                      function: () => addNum('8'),
+                      function: () => addChar('8'),
                     ),
                     CusButton(
                       text: "9",
-                      function: () => addNum('9'),
+                      function: () => addChar('9'),
                     ),
                     CusButton(
                       text: "*",
                       type: BtnType.operators,
-                      function: () {},
+                      function: () => addChar('*'),
                     )
                   ],
                 ),
@@ -154,20 +183,20 @@ class _MyAppState extends State<MyApp> {
                   children: [
                     CusButton(
                       text: "4",
-                      function: () => addNum('4'),
+                      function: () => addChar('4'),
                     ),
                     CusButton(
                       text: "5",
-                      function: () => addNum('5'),
+                      function: () => addChar('5'),
                     ),
                     CusButton(
                       text: "6",
-                      function: () => addNum('6'),
+                      function: () => addChar('6'),
                     ),
                     CusButton(
                       text: "-",
                       type: BtnType.operators,
-                      function: () {},
+                      function: () => addChar('-'),
                     )
                   ],
                 ),
@@ -179,20 +208,20 @@ class _MyAppState extends State<MyApp> {
                   children: [
                     CusButton(
                       text: "1",
-                      function: () => addNum('1'),
+                      function: () => addChar('1'),
                     ),
                     CusButton(
                       text: "2",
-                      function: () => addNum('2'),
+                      function: () => addChar('2'),
                     ),
                     CusButton(
                       text: "3",
-                      function: () => addNum('3'),
+                      function: () => addChar('3'),
                     ),
                     CusButton(
                       text: "+",
                       type: BtnType.operators,
-                      function: () {},
+                      function: () => addChar('+'),
                     )
                   ],
                 ),
@@ -204,20 +233,20 @@ class _MyAppState extends State<MyApp> {
                   children: [
                     CusButton(
                       text: ".",
-                      function: () => addNum('.'),
+                      function: () => addChar('.'),
                     ),
                     CusButton(
                       text: "0",
-                      function: () => addNum('0'),
+                      function: () => addChar('0'),
                     ),
                     CusButton(
                       text: "00",
-                      function: () => addNum('00'),
+                      function: () => addChar('00'),
                     ),
                     CusButton(
                       text: "=",
                       type: BtnType.equator,
-                      function: () {},
+                      function: getResult,
                     )
                   ],
                 ),
